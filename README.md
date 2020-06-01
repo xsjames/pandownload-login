@@ -3,7 +3,7 @@
 
 [加入 Telegram 交流群](https://t.me/pandown)
 # 使用方法
--  [下载 Release 并运行](https://github.com/TkzcM/pandownload-login/releases/tag/v0.1)
+-  [下载 Release 并运行](https://github.com/TkzcM/pandownload-login/releases/latest)
 
 - 修改 PanData/config.ini
 
