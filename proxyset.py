@@ -1,7 +1,5 @@
 import requests
 import psutil
-import os
-import re
 
 
 def find_procs_by_name(name):
@@ -13,27 +11,25 @@ def find_procs_by_name(name):
     return ls
 
 
+pids = psutil.pids()
 isAria2 = 0
 isFixed = 0
-if find_procs_by_name('aria2c.exe') or find_procs_by_name('aria2cP.exe'):
-    if find_procs_by_name('aria2c.exe') is not None:
-        pid = find_procs_by_name('aria2c.exe')[0].pid
-        result = os.popen('netstat -aon|findstr ' + str(pid)).read()
-        port = re.search('127\.0\.0\.1:(.{4,5})', result)
-    elif find_procs_by_name('aria2cP.exe') is not None:
-        pid = find_procs_by_name('aria2cP.exe')[0].pid
-        result = os.popen('netstat -aon|findstr ' + str(pid)).read()
-        port = re.search('127\.0\.0\.1:(.{4,5})', result)
-    print('检测到 aria2，修改中')
+if find_procs_by_name('aria2c.exe'):
+    print('检测到 aria2，修改中（需要1-2分钟，请稍候）')
     isAria2 = 1
-    setproxy = '{"jsonrpc":2,"id":"webui","method":"system.multicall","params":[[{' \
-               '"methodName":"aria2.changeGlobalOption","params":["token:pandownload",{"all-proxy":""}]}]]} '
-    post = requests.post(url='http://127.0.0.1:' + str(port[1]) + '/jsonrpc', data=setproxy, timeout=0.1)
-    normal_data = '{"id":"webui","jsonrpc":"2.0","result":[["OK"]]}'
-    if post.text == normal_data:
-        print('修改成功')
-        input("\n按回车键退出...")
-        isFixed = 1
+    for i in range(36800, 37000):
+        setproxy = '{"jsonrpc":2,"id":"webui","method":"system.multicall","params":[[{' \
+                   '"methodName":"aria2.changeGlobalOption","params":["token:pandownload",{"all-proxy":""}]}]]} '
+        try:
+            post = requests.post(url='http://127.0.0.1:' + str(i) + '/jsonrpc', data=setproxy, timeout=0.1)
+        except requests.exceptions.RequestException:
+            continue
+        normal_data = '{"id":"webui","jsonrpc":"2.0","result":[["OK"]]}'
+        if post.text == normal_data:
+            print('修改成功')
+            input("\n按回车键退出...")
+            isFixed = 1
+            break
 if isAria2 == 0:
     print('未检测到 aria2，请打开 Pandownload')
     input("\n按回车键退出...")
