@@ -16,11 +16,11 @@ def find_procs_by_name(name):
 isAria2 = 0
 isFixed = 0
 if find_procs_by_name('aria2c.exe') or find_procs_by_name('aria2cP.exe'):
-    if find_procs_by_name('aria2c.exe')[0].pid is not None:
+    if find_procs_by_name('aria2c.exe') is not None:
         pid = find_procs_by_name('aria2c.exe')[0].pid
         result = os.popen('netstat -aon|findstr ' + str(pid)).read()
         port = re.search('127\.0\.0\.1:(.{4,5})', result)
-    elif find_procs_by_name('aria2cP.exe')[0].pid is not None:
+    elif find_procs_by_name('aria2cP.exe') is not None:
         pid = find_procs_by_name('aria2cP.exe')[0].pid
         result = os.popen('netstat -aon|findstr ' + str(pid)).read()
         port = re.search('127\.0\.0\.1:(.{4,5})', result)
